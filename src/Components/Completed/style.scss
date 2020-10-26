@@ -1,0 +1,31 @@
+.work-list{
+  width: 50%;
+  margin: auto;
+}
+.list{
+  width: 600px;
+  border: 1px solid #9d9797;
+  position: relative;
+  border-radius: 15px;
+  height: 50px;
+  background: #e8f5fc;
+  margin: 30px auto;
+}
+.check{
+  left: 20px;
+  position: absolute;
+  top: 10px;
+}
+.create{
+  height: 35px;
+  width: 20%;
+  border-radius: 10px;
+  background: bisque;
+  border: 1px solid darkgrey;
+  float: right;
+  margin-right: 85px;
+  cursor: pointer;
+}
+.form{
+  margin: 50px auto;
+}

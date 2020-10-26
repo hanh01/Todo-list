@@ -1,0 +1,21 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "09:00 sang t7 hop voi anh Duong",
+      "is_completed": false
+    },
+    {
+      "id": 2,
+      "title": "09:00 sang t7 hop voi anh Duong",
+      "is_completed": true
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Hanh",
+      "age": ""
+    }
+  ]
+}
