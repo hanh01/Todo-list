@@ -14,7 +14,7 @@ const Title = styled.h1`
     text-align: center;
 `;
 
-// const {confirm} = Modal;
+const {confirm} = Modal;
 
 class Home extends Component {
     constructor(props) {
@@ -24,7 +24,7 @@ class Home extends Component {
             input: '',
             isChecked: '',
         }
-        this.deleteItem = this.deleteItem.bind(this)
+        this.showDeleteConfirm = this.showDeleteConfirm.bind(this)
         this.componentDidMount = this.componentDidMount.bind(this)
         this.handleCheckCompleted = this.handleCheckCompleted.bind(this)
     }
@@ -54,42 +54,42 @@ class Home extends Component {
             })
     }
 
-    // showDeleteConfirm() {
-    //     confirm({
-    //         title: 'Are you sure delete this task?',
-    //         icon: <ExclamationCircleOutlined/>,
-    //         onOk(id) {
-    //             axios.delete(`http://localhost:3000/items/${id}`)
-    //                 .then(() => {
-    //                     this.setState({
-    //                         items: this.state.items.filter((p) => p.id !== id)
-    //                     })
-    //                 })
-    //                 .catch(e => {
-    //                     console.log(e);
-    //                 });
-    //         },
-    //         onCancel() {
-    //             console.log('Cancel');
-    //         },
-    //     });
-    // }
-    //
-
-    deleteItem(id) {
-        // eslint-disable-next-line no-restricted-globals
-        if (confirm("bạn chắc chắn muốn xóa")) {
-            axios.delete(`http://localhost:3000/items/${id}`)
-                .then(() => {
-                    this.setState({
-                        items: this.state.items.filter((p) => p.id !== id)
+    showDeleteConfirm(id) {
+        confirm({
+            title: 'Are you sure delete this task?',
+            icon: <ExclamationCircleOutlined/>,
+            onOk:() =>{
+                axios.delete(`http://localhost:3000/items/${id}`)
+                    .then(() => {
+                        this.setState({
+                            items: this.state.items.filter((p) => p.id !== id)
+                        })
                     })
-                })
-                .catch(e => {
-                    console.log(e);
-                });
-        }
+                    .catch(e => {
+                        console.log(e);
+                    });
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+
     }
+
+    // deleteItem(id) {
+    //     // eslint-disable-next-line no-restricted-globals
+    //     if (confirm("Bạn muốn xóa")) {
+    //         axios.delete(`http://localhost:3000/items/${id}`)
+    //             .then(() => {
+    //                 this.setState({
+    //                     items: this.state.items.filter((p) => p.id !== id)
+    //                 })
+    //             })
+    //             .catch(e => {
+    //                 console.log(e);
+    //             });
+    //     }
+    // }
 
     render() {
         const items = this.state.items;
@@ -118,9 +118,10 @@ class Home extends Component {
                                     &nbsp;{item.input}
                                 </Checkbox>
                                 <span>
-                                    <DeleteFilled className="icon-delete"
-                                                  onClick={() => this.deleteItem && this.deleteItem(item.id)}
-                                                  type="dashed"/>
+                                    <DeleteFilled
+                                        className="icon-delete"
+                                        onClick={() => this.showDeleteConfirm && this.showDeleteConfirm(item.id)}
+                                        type="dashed"/>
                                 </span>
                                 <span>
                                     <Link to={{
