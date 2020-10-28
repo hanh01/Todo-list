@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Checkbox, Button, Modal} from "antd";
+import {Checkbox, Button, Modal, message, Empty} from "antd";
 import 'antd/dist/antd.css';
 import './style.scss';
 import {
@@ -16,6 +16,22 @@ const Title = styled.h1`
 
 const {confirm} = Modal;
 
+function FormError(props) {
+    if (props.isHidden === false) {
+        return null;
+    }
+    return (<Empty
+        image="https://partscargo.com/assets/images/no_data.png"
+        imageStyle={{
+            height: 200,
+        }}
+        description={
+            <span>
+            Chưa có công việc nào . &nbsp; <a href="/todos/create">Thêm công việc mới (^.^)</a>
+           </span>
+        }/>)
+}
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -23,21 +39,28 @@ class Home extends Component {
             items: [],
             input: '',
             isChecked: '',
+            showForm: false,
         }
         this.showDeleteConfirm = this.showDeleteConfirm.bind(this)
         this.componentDidMount = this.componentDidMount.bind(this)
         this.handleCheckCompleted = this.handleCheckCompleted.bind(this)
     }
 
+
     componentDidMount() {
         axios.get(`http://localhost:3000/items?isChecked=false`)
             .then(res => {
                 const items = res.data;
                 this.setState({items})
-                console.log(res)
+                if (items.length === 0) {
+                    return this.handleShowForm()
+                } else {
+                    this.setState({items})
+                }
             })
             .catch(error => console.log(error));
     }
+
 
     handleCheckCompleted(id) {
         let value = this.state.items.filter((e) => e.id === id);
@@ -45,20 +68,44 @@ class Home extends Component {
             input: value[0].input,
             isChecked: true,
             id: this.state.id,
+            time: '13:20'
         };
         axios.put(`http://localhost:3000/items/${id}`, data)
             .then(() => {
                 this.setState({
                     items: this.state.items.filter((p) => p.id !== id),
                 })
+                this.success()
             })
     }
 
+
+    handleShowForm = () => {
+        this.setState({
+            showForm: !this.state.showForm
+        });
+    }
+
+
+    success() {
+        message.success({
+            content: 'Công việc đã hoàn thành',
+            className: 'custom-class',
+            style: {
+                marginTop: '0px',
+                float: 'right',
+                marginRight: '30px',
+                fontSize: '15px'
+            },
+        });
+    };
+
+
     showDeleteConfirm(id) {
         confirm({
-            title: 'Are you sure delete this task?',
+            title: 'Bạn muốn xóa công việc này ?',
             icon: <ExclamationCircleOutlined/>,
-            onOk:() =>{
+            onOk: () => {
                 axios.delete(`http://localhost:3000/items/${id}`)
                     .then(() => {
                         this.setState({
@@ -73,23 +120,8 @@ class Home extends Component {
                 console.log('Cancel');
             },
         });
-
     }
 
-    // deleteItem(id) {
-    //     // eslint-disable-next-line no-restricted-globals
-    //     if (confirm("Bạn muốn xóa")) {
-    //         axios.delete(`http://localhost:3000/items/${id}`)
-    //             .then(() => {
-    //                 this.setState({
-    //                     items: this.state.items.filter((p) => p.id !== id)
-    //                 })
-    //             })
-    //             .catch(e => {
-    //                 console.log(e);
-    //             });
-    //     }
-    // }
 
     render() {
         const items = this.state.items;
@@ -131,10 +163,16 @@ class Home extends Component {
                                         <EditOutlined className="icon-edit"/>
                                     </Link>
                                 </span>
+                                <span>
+                                    <div className="time">
+                                        {item.time}
+                                    </div>
+                                </span>
                             </p>
                         </div>
                     ))}
                 </div>
+                <FormError isHidden={this.state.showForm}/>
             </div>
         )
     }

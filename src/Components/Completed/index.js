@@ -1,14 +1,27 @@
 import React, {Component} from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
-import {Button, Checkbox} from "antd";
+import {Button, Empty, Checkbox, message} from "antd";
 import * as axios from "axios";
+import 'antd/dist/antd.css';
 import './style.scss';
 
 const Title = styled.h1`
     color : red;
-    text-align: center;
-`;
+    text-align: center`
+;
+
+function FormError(props) {
+    if (props.isHidden === false) {
+        return null;
+    }
+    return (<Empty
+        description={
+            <span>
+            Chưa có công việc hoàn thành. &nbsp; <a href="/">Quay lại danh sách công việc</a>
+           </span>
+        }/>)
+}
 
 class Completed extends Component {
     constructor(props) {
@@ -19,6 +32,7 @@ class Completed extends Component {
             id: '',
             input: '',
             isChecked: '',
+            showForm: false,
         }
         this.componentDidMount = this.componentDidMount.bind(this)
         this.handleCheckCompleted2 = this.handleCheckCompleted2.bind(this)
@@ -28,10 +42,33 @@ class Completed extends Component {
         axios.get(`http://localhost:3000/items?isChecked=true`)
             .then(res => {
                 const items = res.data;
-                this.setState({items})
+                console.log(items)
+                if (items.length === 0) {
+                    return this.handleShowForm()
+                } else {
+                    this.setState({items})
+                }
             })
             .catch(error => console.log(error));
+    }
 
+    success() {
+        message.success({
+            content: 'Đã di chuyển sang trang danh sách công việc',
+            className: 'custom-class',
+            style: {
+                marginTop: '0px',
+                float: 'right',
+                marginRight: '30px',
+                fontSize: '15px'
+            },
+        });
+    };
+
+    handleShowForm = () => {
+        this.setState({
+            showForm: !this.state.showForm
+        });
     }
 
     handleCheckCompleted2(id) {
@@ -40,12 +77,14 @@ class Completed extends Component {
             input: value[0].input,
             isChecked: false,
             id: this.state.id,
+            time: '13:20'
         };
         axios.put(`http://localhost:3000/items/${id}`, data)
             .then(() => {
                 this.setState({
                     items: this.state.items.filter((p) => p.id !== id),
                 })
+                this.success()
             })
     }
 
@@ -72,10 +111,16 @@ class Completed extends Component {
                                 >
                                     &nbsp;{item.input}
                                 </Checkbox>
+                                <span>
+                                    <div className="time1">
+                                        {item.time}
+                                    </div>
+                                </span>
                             </p>
                         </div>
                     ))}
                 </div>
+                <FormError isHidden={this.state.showForm}/>
             </div>
         )
     }
