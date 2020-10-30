@@ -25,13 +25,10 @@ class Create extends Component {
             input: '',
             isChecked: false,
             isInputValid: false,
-            errorMessage: ''
         }
         this.handleInput = this.handleInput.bind(this)
         this.addItems = this.addItems.bind(this)
         this.componentDidMount = this.componentDidMount.bind(this)
-        this.success = this.success.bind(this)
-        this.validateInput = this.validateInput.bind(this)
         this.jobInput = React.createRef();
     }
 
@@ -46,8 +43,11 @@ class Create extends Component {
     }
 
     handleInput(e) {
+        const {isInputValid} = this.validateInput(this.state.input);
         this.setState({
             input: e.target.value,
+            isInputValid: isInputValid,
+            errorMessage: '',
         })
     }
 
@@ -65,15 +65,13 @@ class Create extends Component {
         }
     }
 
-
-    handleInputValidation = () => {
+    handleInputValidation = (event) => {
         const {isInputValid, errorMessage} = this.validateInput(this.state.input);
             this.setState({
                 isInputValid: isInputValid,
                 errorMessage: errorMessage,
             })
     }
-
 
     toggleChange = () => {
         this.setState({
@@ -115,7 +113,7 @@ class Create extends Component {
                     })
                 })
             if (!isChecked) {
-                return window.history.back(); // back lại trang
+                return window.history.back();
             } else {
                 window.history.forward(); // ngăn việc back lại trang
             }

@@ -9,19 +9,6 @@ const Title = styled.h1`
     text-align: center;
 `;
 
-const success = () => {
-    message.success({
-        content: 'Chỉnh sửa công việc thành công',
-        className: 'custom-class',
-        style: {
-            marginTop: '0px',
-            float: 'right',
-            marginRight: '30px',
-            fontSize: '15px'
-        },
-    });
-};
-
 function FormError(props) {
     if (props.isHidden) {
         return null;
@@ -55,8 +42,11 @@ class Edit extends Component {
     }
 
     handleInputEdit(e) {
+        const {isInputValid} = this.validateInput(this.state.input);
         this.setState({
             input: e.target.value,
+            isInputValid: isInputValid,
+            errorMessage: '',
         })
     }
 
@@ -74,6 +64,18 @@ class Edit extends Component {
         }
     }
 
+    success = () => {
+        message.success({
+            content: 'Chỉnh sửa công việc thành công',
+            className: 'custom-class',
+            style: {
+                marginTop: '0px',
+                float: 'right',
+                marginRight: '30px',
+                fontSize: '15px'
+            },
+        });
+    };
 
     handleInputValidation = () => {
         const {isInputValid, errorMessage} = this.validateInput(this.state.input);
@@ -83,8 +85,9 @@ class Edit extends Component {
         })
     }
 
-    EditItem(e,input) {
+    EditItem(e) {
         e.preventDefault();
+        const input = this.state.input;
         const id = this.props.match.params.id;
         console.log(id)
         let data = {
@@ -93,11 +96,14 @@ class Edit extends Component {
             id,
             time: '13:20'
         };
-        if(input !== ""){
-            axios.put(`http://localhost:3000/items/${id}`, data)
+        if(input.trim() !== ''){
+            this.success();
+            axios.put(`http://localhost:3000/items/${id}`,data)
                 .then(() => {
                     this.setState({
                         items: this.state.items.filter((p) => p.id !== id),
+                        input: "",
+                        errorMessage:""
                     })
                 })
                 .catch(e => {
@@ -124,7 +130,7 @@ class Edit extends Component {
                             defaultValue={input}
                             ref={this.jobInput}
                         />
-                        <Button htmlType="submit" className="submit" onClick={success}>
+                        <Button htmlType="submit" className="submit">
                             Lưu lại
                         </Button>
                     </div>

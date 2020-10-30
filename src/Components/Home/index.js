@@ -46,16 +46,18 @@ class Home extends Component {
         this.handleCheckCompleted = this.handleCheckCompleted.bind(this)
     }
 
-
     componentDidMount() {
         axios.get(`http://localhost:3000/items?isChecked=false`)
             .then(res => {
                 const items = res.data;
+                console.log(items)
                 this.setState({items})
                 if (items.length === 0) {
                     return this.handleShowForm()
                 } else {
-                    this.setState({items})
+                    this.setState({
+                        items,
+                    })
                 }
             })
             .catch(error => console.log(error));
@@ -165,7 +167,7 @@ class Home extends Component {
                                 </span>
                                 <span>
                                     <div className="time">
-                                        {item.time}
+                                        Thời gian tạo : {item.time}
                                     </div>
                                 </span>
                             </p>

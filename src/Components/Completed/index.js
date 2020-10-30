@@ -16,6 +16,10 @@ function FormError(props) {
         return null;
     }
     return (<Empty
+        image="https://partscargo.com/assets/images/no_data.png"
+        imageStyle={{
+            height: 200,
+        }}
         description={
             <span>
             Chưa có công việc hoàn thành. &nbsp; <a href="/">Quay lại danh sách công việc</a>
@@ -36,6 +40,7 @@ class Completed extends Component {
         }
         this.componentDidMount = this.componentDidMount.bind(this)
         this.handleCheckCompleted2 = this.handleCheckCompleted2.bind(this)
+        this.handleShowForm = this.handleShowForm.bind(this)
     }
 
     componentDidMount() {
