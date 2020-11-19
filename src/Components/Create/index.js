@@ -116,6 +116,7 @@ class Create extends Component {
                 return window.history.back();
             } else {
                 window.history.forward(); // ngăn việc back lại trang
+                this.jobInput.current.focus();
             }
         }
     }

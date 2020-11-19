@@ -1,34 +1,10 @@
 {
   "items": [
     {
-      "input": "                         6",
-      "isChecked": true,
-      "time": "13:20",
-      "id": 4
-    },
-    {
-      "input": "2",
-      "isChecked": true,
-      "time": "13:20",
-      "id": 5
-    },
-    {
-      "input": "      3",
-      "isChecked": true,
-      "time": "13:20",
-      "id": 6
-    },
-    {
-      "input": "                                  6",
-      "isChecked": true,
-      "time": "13:20",
-      "id": 7
-    },
-    {
-      "input": "hi3",
+      "input": "vui",
       "isChecked": false,
       "time": "13:20",
-      "id": 12
+      "id": 7
     }
   ]
 }
